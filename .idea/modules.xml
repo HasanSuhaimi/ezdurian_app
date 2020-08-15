@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ezdurian_app.iml" filepath="$PROJECT_DIR$/.idea/ezdurian_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ezdurian_tool/ezdurian_tool.iml" filepath="$PROJECT_DIR$/ezdurian_tool/ezdurian_tool.iml" />
+    </modules>
+  </component>
+</project>
