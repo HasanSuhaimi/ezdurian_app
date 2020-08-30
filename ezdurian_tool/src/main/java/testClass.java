@@ -25,8 +25,8 @@ public class testClass {
         System.out.println("test");
 
         testClass test = new testClass();
-        //test.SeleniumPulldata();
-        test.SeleniumSendMsg();
+        test.SeleniumPulldata();
+        //test.SeleniumSendMsg();
         // create webclient
         /*final WebClient webClient = new WebClient(BrowserVersion.CHROME);
         webClient.getOptions().setUseInsecureSSL(true); //ignore ssl certificate
@@ -192,6 +192,7 @@ public class testClass {
         driver.quit();
     }
 
+    //return a list of data for invoice NP
     public void SeleniumPulldata() throws Exception {
 
         //set the browser in the background
@@ -265,12 +266,15 @@ public class testClass {
 
         }
 
-        System.out.println(datas.get(1).getAdress());
-
-        //Thread.sleep(5000);
-
         driver.quit();
 
+        for(int x = 0 ; x < datas.size(); x++){
+
+            System.out.println(datas.get(x).getTextMessage() + "\n");
+
+        }
+
+        //return datas;
     }
 
     public static class data {
@@ -311,6 +315,23 @@ public class testClass {
 
         public void setStatus (String value) {this.status = value;}
         public String getStatus () { return status; }
+
+        public String getTextMessage () {
+
+            String textMessage="Whatsapp / SMS merchant\n" +
+                    "delivery request form\n" +
+                    "1. Sama-Sama Lokal by Maybank\n" +
+                    "2. Restaurant / Gerai : ezydurian\n\n" +
+                    "Order:\n" +
+                    "1. Recipient name: "+ name + "\n" +
+                    "2. Recipient contact number: "+ number + "\n" +
+                    "3. Delivery address: "+ adress + "\n" +
+                    "4. Pick up time: now \n\n" +
+                    "Thanks team Maybank  😊";
+
+            return textMessage;
+
+        }
 
     }
 }
