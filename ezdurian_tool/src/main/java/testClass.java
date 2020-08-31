@@ -15,8 +15,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 
 
 public class testClass {
@@ -25,150 +28,27 @@ public class testClass {
         System.out.println("test");
 
         testClass test = new testClass();
-        test.SeleniumPulldata();
-        //test.SeleniumSendMsg();
-        // create webclient
-        /*final WebClient webClient = new WebClient(BrowserVersion.CHROME);
-        webClient.getOptions().setUseInsecureSSL(true); //ignore ssl certificate
-        webClient.getOptions().setThrowExceptionOnScriptError(false);
-        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-
-        testClass test = new testClass();
-        HtmlPage loginPage = test.loginForm(webClient);
-        test.reportPage(webClient);
-        */
-    }
-
-    public void homePage() throws Exception {
-
-        try{
-            final WebClient webClient = new WebClient(BrowserVersion.CHROME);
-            webClient.getOptions().setUseInsecureSSL(true); //ignore ssl certificate
-            webClient.getOptions().setThrowExceptionOnScriptError(false);
-            webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-
-            final HtmlPage page = webClient.getPage("https://ezydurian.onpay.my/admin/login");
-
-            webClient.waitForBackgroundJavaScriptStartingBefore(200);
-            webClient.waitForBackgroundJavaScript(20000);
-
-            final String pageAsXml = page.asXml();
-            final String pageAsText = page.asText();
-
-            System.out.println(pageAsXml);
-
-        }
-        catch (Exception e){ System.out.println("errors: "+e);}
-    }
-
-    public HtmlPage loginForm(WebClient webClient) throws Exception {
-
-        try {
-            // Get the first page
-            final HtmlPage page1 = webClient.getPage("https://ezydurian.onpay.my/admin/login");
-            webClient.waitForBackgroundJavaScriptStartingBefore(2000);
-            webClient.waitForBackgroundJavaScript(20000);
-
-            // Get the form that we are dealing with and within that form,
-            // find the submit button and the field that we want to change.
-            final List<HtmlForm> formList = page1.getForms();
-            final HtmlForm form = formList.get(0);
-            System.out.println("start the form: "+ form+" HABIS");
-
-            form.getInputByName("username").setValueAttribute("");
-            form.getInputByName("password").setValueAttribute("");
-
-            //click login button
-            HtmlPage pageAfterClick = (HtmlPage)form.getButtonByName("login").click();
-
-            //System.out.println(form.getOnSubmitAttribute());
-            //System.out.println(pageAfterClick.asXml());
-
-            //return next page
-            return pageAfterClick;
-
-        }
-        catch (Exception e)
-        {
-            System.out.println("errors: "+e);
-            return null;
-        }
+        List<data> data = test.SeleniumPulldata();
+        //test.SeleniumSendMsg(data);
 
     }
 
-    public void reportPage(WebClient webClient) throws Exception {
-
-        try {
-            final HtmlPage page = webClient.getPage("https://ezydurian.onpay.my/admin/reports/sales");
-            webClient.waitForBackgroundJavaScriptStartingBefore(200);
-            webClient.waitForBackgroundJavaScript(20000);
-
-            //get the form to check/uncheck boxes
-            final List<HtmlForm> formList = page.getForms();
-
-            for (HtmlForm form : formList)
-            {
-                System.out.println("start forms: "+form);
-
-                //uncheck/check the wanted value
-                //System.out.println(form.getInputByName("c[form_code]"));
-
-                form.getInputByName("c[invoice_number]").setAttribute("checked", "checked");
-                form.getInputByName("c[client_phone_number]").setAttribute("checked", "checked");
-                form.getInputByName("c[client_address]").setAttribute("checked", "checked");
-                form.getInputByName("c[extra_field_1]").setAttribute("checked", "checked");
-                form.getInputByName("c[extra_field_2]").setAttribute("checked", "checked");
-                form.getInputByName("c[products]").setAttribute("checked", "checked");
-                form.getInputByName("c[confirmed_at]").setAttribute("checked", "checked");
-                form.getInputByName("c[status]").setAttribute("checked", "checked");
-
-            }
-
-            //generated button
-            final HtmlButton button = page.getHtmlElementById("show");
-
-            //click button
-            HtmlPage pageAfterClick = button.click();
-            //System.out.println(pageAfterClick.asText());
-
-            //get the table
-            final HtmlTable dataTable = (HtmlTable) pageAfterClick.getByXPath("//table[@class='table table-hover table-bordered table-condensed']").get(0);
-
-            for (final HtmlTableRow row : dataTable.getRows()) {
-
-                if(row.getCell(1).asText().contains("NP"))
-                {
-                    for (final HtmlTableCell cell : row.getCells()) {
-                        System.out.println("   Found cell: " + cell.asText());
-                    }
-
-                    String textMessage="Whatsapp / SMS merchant\ndelivery request form\n1. Sama-Sama Lokal by Maybank\n2. Restaurant / Gerai : ezydurian\n\nOrder:\n1. Recipient name: NP\n2. Recipient contact number: \n3. Delivery address:\n4. Pick up time: now \n\nThanks team Maybank  😊";
-
-                    System.out.println(textMessage);
-                }
-
-            }
-
-        }catch (Exception e) {
-
-            System.out.println("Errors: "+e);
-        }
-
-    }
-
-    public void SeleniumSendMsg() throws Exception {
+    public void SeleniumSendMsg(List<data> data) throws Exception {
 
         ChromeDriver driver = new ChromeDriver();
         driver.get("https://web.whatsapp.com/");
-        Thread.sleep(7000);  // Let the user actually see something!
+        Thread.sleep(10000);  // Let the user actually see something!
         //get search button
         WebElement boxSearch = driver.findElement(By.xpath("//button[@class=\"_3e4VU\"]"));
         //click search button
         boxSearch.click();
+
         //search contact
-        String name = "KC Sheffield" ;
+        String name = "" ;
         WebElement searchContact = driver.findElement(By.xpath("//div[@class=\"_3FRCZ copyable-text selectable-text\"]"));
         searchContact.sendKeys(name);
+        Thread.sleep(3000);
+
         //open chat with the contact
         WebElement targetContact = driver.findElement(By.xpath("//span[@title="+ "\"" + name + "\"" +"]"));
         targetContact.click();
@@ -176,31 +56,28 @@ public class testClass {
         //get textBox and send message
         WebElement textBox = driver.findElement(By.xpath("//div[@class=\"_3FRCZ copyable-text selectable-text\"][@contenteditable=\"true\"][@data-tab=\"1\"]"));
 
-        for(int i = 0; i <=20 ; i++){
-        textBox.sendKeys("Testing");
-        textBox.sendKeys(Keys.ENTER);
+        //textBox.sendKeys("");
+
+        for(int i = 0; i <data.size() ; i++)
+        {
+            Actions action = new Actions(driver);
+            Action texting = data.get(i).getTextAction(action,textBox);
+            texting.perform();
         }
-        textBox.sendKeys("Settle");
-        textBox.sendKeys(Keys.ENTER);
+
         Thread.sleep(5000);
-        //boxSearch.click();
-        //Thread.sleep(100);
-        //boxSearch.sendKeys("KC");
-
-        //System.out.println(boxSearch.isDisplayed());
-
         driver.quit();
     }
 
-    //return a list of data for invoice NP
-    public void SeleniumPulldata() throws Exception {
+    //print return a list of data for invoice NP
+    public List<data> SeleniumPulldata() throws Exception {
 
         //set the browser in the background
-        ChromeOptions options = new ChromeOptions();
-        options.setHeadless(true);
+        //ChromeOptions options = new ChromeOptions();
+        //options.setHeadless(true);
 
         //make sure to pass options as the parameter
-        ChromeDriver driver = new ChromeDriver(options);
+        ChromeDriver driver = new ChromeDriver();
 
         driver.get("https://ezydurian.onpay.my/admin/login");
 
@@ -249,7 +126,8 @@ public class testClass {
             if(column_row.get(1).getText().contains("NP"))
             {
                 data Data = new data();
-                //System.out.println(rows_table.get(x).getText() + "\n");
+                //System.out.println(column_row.get(12).getText() + "\n");
+                Data.setIndex(column_row.get(0).getText());
                 Data.setInvoice(column_row.get(1).getText());
                 Data.setName(column_row.get(2).getText());
                 //skip email
@@ -258,27 +136,27 @@ public class testClass {
                 Data.setField1(column_row.get(6).getText());
                 Data.setField2(column_row.get(7).getText());
                 Data.setProduct(column_row.get(8).getText());
-                Data.setConfirmed_at(column_row.get(9).getText());
-                Data.setStatus(column_row.get(10).getText());
+                Data.setConfirmed_at(column_row.get(11).getText());
+                Data.setStatus(column_row.get(12).getText());
 
                 datas.add(Data);
             }
 
         }
 
-        driver.quit();
+        //driver.quit();
 
         for(int x = 0 ; x < datas.size(); x++){
-
-            System.out.println(datas.get(x).getTextMessage() + "\n");
-
+            System.out.println("####\n"+datas.get(x).getConfirmed_at()+" : "+datas.get(x).getStatus()+"\n####\n" + datas.get(x).getTextMessage() + "\n");
         }
 
-        //return datas;
+        //return list of data
+        return datas;
     }
 
     public static class data {
 
+        private String index;
         private String invoice;
         private String name;
         private String number;
@@ -288,6 +166,9 @@ public class testClass {
         private String product;
         private String confirmed_at;
         private String status;
+
+        public void setIndex (String value) {this.index = value;}
+        public String getIndex () { return index; }
 
         public void setInvoice (String value) {this.invoice = value;}
         public String getInvoice () { return invoice; }
@@ -323,13 +204,31 @@ public class testClass {
                     "1. Sama-Sama Lokal by Maybank\n" +
                     "2. Restaurant / Gerai : ezydurian\n\n" +
                     "Order:\n" +
-                    "1. Recipient name: "+ name + "\n" +
+                    "1. Recipient name: "+"NP-"+index +" "+ name + "\n" +
                     "2. Recipient contact number: "+ number + "\n" +
                     "3. Delivery address: "+ adress + "\n" +
                     "4. Pick up time: now \n\n" +
-                    "Thanks team Maybank  😊";
+                    "Thanks team Maybank  :)";
 
             return textMessage;
+        }
+
+        public Action getTextAction (Actions action, WebElement textBox) {
+
+            //create a series of action
+            Action texting = action.moveToElement(textBox).sendKeys("Whatsapp / SMS merchant").keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("delivery request form").keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("1. Sama-Sama Lokal by Maybank").keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("2. Restaurant / Gerai : ezydurian").keyDown(Keys.SHIFT).sendKeys("\n\n").
+                    keyUp(Keys.SHIFT).sendKeys("Order:").keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("1. Recipient name: "+"NP-"+index +" "+ name).keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("2. Recipient contact number: "+ number).keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("3. Delivery address: "+ adress).keyDown(Keys.SHIFT).sendKeys("\n").
+                    keyUp(Keys.SHIFT).sendKeys("4. Pick up time: now ").keyDown(Keys.SHIFT).sendKeys("\n\n").
+                    keyUp(Keys.SHIFT).sendKeys("Thanks team Maybank :)\n")
+                    .build();
+
+            return texting;
 
         }
 
